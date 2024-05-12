@@ -12,22 +12,25 @@ export class User {
     id: string;
     name: string;
     surname: string;
-    subscribers: Nullable<Subsciber>[];
+    subscribers: Nullable<Subscriber>[];
 }
 
-export class Subsciber {
+export class Subscriber {
+    id: string;
     name: string;
     surname: string;
 }
 
 export abstract class IQuery {
     abstract getUsers(): Nullable<User>[] | Promise<Nullable<User>[]>;
+
+    abstract getUserById(userId: string): User | Promise<User>;
 }
 
 export abstract class IMutation {
     abstract createUser(name: string, surname: string): User | Promise<User>;
 
-    abstract addSubscriber(userId: string, name: string, surname: string): Nullable<Subsciber> | Promise<Nullable<Subsciber>>;
+    abstract addSubscriber(userId: string, subId: string): User | Promise<User>;
 }
 
 type Nullable<T> = T | null;

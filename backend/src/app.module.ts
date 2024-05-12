@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserModule } from './user/user.module';
+import { UsersModule } from './users/users.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
@@ -25,7 +25,7 @@ import { join } from 'path';
         outputAs: 'class',
       },
     }),
-    UserModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [],
