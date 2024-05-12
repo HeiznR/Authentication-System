@@ -1,0 +1,20 @@
+type User {
+  id: String!
+  name: String!
+  surname: String!
+  subscribers: [Subsciber]!
+}
+
+type Subsciber {
+  name: String!
+  surname: String!
+}
+
+type Query {
+  getUsers: [User]!
+}
+
+type Mutation {
+  createUser(name: String!, surname: String!): User!
+  addSubscriber(userId: String!, name: String!, surname: String!): Subsciber
+}
