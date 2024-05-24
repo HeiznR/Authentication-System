@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -11,35 +12,33 @@ export class UsersService {
   ) {}
 
   async getUsers(): Promise<User[]> {
-    return this.usersRepository
-      .createQueryBuilder('user')
-      .leftJoinAndSelect('user.subscribers', 'subscriber')
-      .getMany();
+    return this.usersRepository.createQueryBuilder('user').getMany();
   }
-  async getUserById(id: string): Promise<User> {
+  async getUserById(userId: string): Promise<User> {
     const user = await this.usersRepository
       .createQueryBuilder('user')
-      .leftJoinAndSelect('user.subscribers', 'subscriber')
-      .where('user.id = :id', { id })
+      .where('user.id = :userId', { userId })
       .getOne();
     return user;
   }
 
-  async createUser(name: string, surname: string): Promise<User> {
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
+    const { name, surname, email, password } = createUserDto;
     const user: User = this.usersRepository.create({
       name,
       surname,
-      subscribers: [],
+      email,
+      password,
     });
     const response = await this.usersRepository.save(user);
     return response;
   }
 
-  async addSubscriber(userId: string, subId: string): Promise<User> {
-    const user = await this.getUserById(userId);
-    const subscriber = await this.getUserById(subId);
-    user.subscribers.push(subscriber);
-    await this.usersRepository.save(user);
-    return user;
+  async deleteUser(userId: string): Promise<string> {
+    const res = await this.usersRepository.delete(userId);
+    if (!res.affected) {
+      throw new NotFoundException(`User with id: ${userId} is not exist`);
+    }
+    return `user with id: ${userId} deleted`;
   }
 }

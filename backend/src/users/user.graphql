@@ -2,13 +2,15 @@ type User {
   id: String!
   name: String!
   surname: String!
-  subscribers: [Subscriber]!
+  email: String!
+  password: String!
 }
 
-type Subscriber {
-  id: String!
+input CreateUserInput {
   name: String!
   surname: String!
+  email: String!
+  password: String!
 }
 
 type Query {
@@ -17,6 +19,6 @@ type Query {
 }
 
 type Mutation {
-  createUser(name: String!, surname: String!): User!
-  addSubscriber(userId: String!, subId: String!): User!
+  createUser(createUserDto: CreateUserInput!): User!
+  deleteUser(userId: String!): String!
 }

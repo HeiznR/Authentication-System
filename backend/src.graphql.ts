@@ -8,17 +8,19 @@
 /* tslint:disable */
 /* eslint-disable */
 
+export class CreateUserInput {
+    name: string;
+    surname: string;
+    email: string;
+    password: string;
+}
+
 export class User {
     id: string;
     name: string;
     surname: string;
-    subscribers: Nullable<Subscriber>[];
-}
-
-export class Subscriber {
-    id: string;
-    name: string;
-    surname: string;
+    email: string;
+    password: string;
 }
 
 export abstract class IQuery {
@@ -28,9 +30,9 @@ export abstract class IQuery {
 }
 
 export abstract class IMutation {
-    abstract createUser(name: string, surname: string): User | Promise<User>;
+    abstract createUser(createUserDto: CreateUserInput): User | Promise<User>;
 
-    abstract addSubscriber(userId: string, subId: string): User | Promise<User>;
+    abstract deleteUser(userId: string): string | Promise<string>;
 }
 
 type Nullable<T> = T | null;
