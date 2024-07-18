@@ -30,15 +30,20 @@ export class UserService {
   }
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const user: User = this.usersRepository.create(createUserDto);
-    return await this.usersRepository.save(user);
+    try {
+      const user: User = this.usersRepository.create(createUserDto);
+      return await this.usersRepository.save(user);
+    } catch (error) {
+      console.error('error while user creation');
+      return error;
+    }
   }
 
-  async deleteUser(userId: string): Promise<string> {
-    const res = await this.usersRepository.delete(userId);
+  async deleteUser(id: string): Promise<string> {
+    const res = await this.usersRepository.delete(id);
     if (!res.affected) {
-      throw new NotFoundException(`User with id: ${userId} is not exist`);
+      throw new NotFoundException(`User with id: ${id} is not exist`);
     }
-    return `user with id: ${userId} deleted`;
+    return `user with id: ${id} deleted`;
   }
 }

@@ -5,6 +5,9 @@ import { IsNotEmpty } from 'class-validator';
 export class CreateUserDto {
   @IsNotEmpty()
   @Field()
+  userName: string;
+  @IsNotEmpty()
+  @Field()
   name: string;
   @IsNotEmpty()
   @Field()
