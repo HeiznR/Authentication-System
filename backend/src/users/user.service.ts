@@ -5,7 +5,7 @@ import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
@@ -21,17 +21,20 @@ export class UsersService {
       .getOne();
     return user;
   }
+  //test function just to test docker compose volumes
+  getUser(): User {
+    return {
+      email: 'testEmail@gmail.com',
+      id: '123456',
+      name: 'name',
+      password: 'password',
+      surname: 'surname',
+    };
+  }
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const { name, surname, email, password } = createUserDto;
-    const user: User = this.usersRepository.create({
-      name,
-      surname,
-      email,
-      password,
-    });
-    const response = await this.usersRepository.save(user);
-    return response;
+    const user: User = this.usersRepository.create(createUserDto);
+    return await this.usersRepository.save(user);
   }
 
   async deleteUser(userId: string): Promise<string> {

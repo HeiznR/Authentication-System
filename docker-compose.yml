@@ -24,6 +24,8 @@ services:
     command: npm run start:dev
     ports:
       - "8080:8080"
+    volumes:
+      - ./backend/src:/app/src
     depends_on:
       - db
     networks:
@@ -38,6 +40,8 @@ services:
     command: npm run start
     ports:
       - "3000:3000"
+    volumes:
+      - ./frontend/src:/app/src
     depends_on:
       - nestapp
       - db

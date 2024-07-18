@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersModule } from './users/users.module';
-import { AuthModule } from './auth/auth.module';
+import { UserModule } from './users/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from './users/user.entity';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -31,8 +30,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
       driver: ApolloDriver,
       autoSchemaFile: true,
     }),
-    UsersModule,
-    AuthModule,
+    UserModule,
   ],
   controllers: [],
   providers: [],
