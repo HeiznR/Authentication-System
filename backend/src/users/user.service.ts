@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -14,22 +15,18 @@ export class UserService {
   async getUsers(): Promise<User[]> {
     return this.usersRepository.createQueryBuilder('user').getMany();
   }
-  async getUserById(userId: string): Promise<User> {
-    const user = await this.usersRepository
-      .createQueryBuilder('user')
-      .where('user.id = :userId', { userId })
-      .getOne();
+  async getUserById(id: string): Promise<User> {
+    const user = await this.usersRepository.findOneBy({ id });
+    if (!user) {
+      throw new NotFoundException('user is not found');
+    }
     return user;
   }
-  //test function just to test docker compose volumes
-  getUser(): User {
-    return {
-      email: 'testEmail@gmail.com',
-      id: '123456',
-      name: 'name',
-      password: 'password',
-      surname: 'surname',
-    };
+
+  async updateUser(updateUserDto: UpdateUserDto, id: string): Promise<User> {
+    const user = await this.getUserById(id);
+    const updatedUser = Object.assign(user, updateUserDto);
+    return this.usersRepository.save(updatedUser);
   }
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {

@@ -1,9 +1,8 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { UserType } from './user.type';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Resolver(() => UserType)
 export class userResolver {
@@ -14,13 +13,16 @@ export class userResolver {
   }
 
   @Query(() => UserType)
-  getUser() {
-    return this.userService.getUser();
+  getUserById(@Args('id') id: string) {
+    return this.userService.getUserById(id);
   }
 
-  @Query(() => UserType)
-  getUserById(@Args('userId') userId: string) {
-    return this.userService.getUserById(userId);
+  @Mutation(() => UserType)
+  updateUser(
+    @Args('updateUserDto') updateUserDto: UpdateUserDto,
+    @Args('id') id: string,
+  ) {
+    return this.userService.updateUser(updateUserDto, id);
   }
 
   @Mutation(() => UserType)
