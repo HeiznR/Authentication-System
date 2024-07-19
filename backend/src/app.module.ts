@@ -6,13 +6,17 @@ import { User } from './users/user.entity';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { AuthModule } from './auth/auth.module';
+import { GqlAuthGuard } from './auth/GqlAuthGuard';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
+    //.env configuration
     ConfigModule.forRoot({
       envFilePath: [`.env.stage.dev`],
       isGlobal: true,
     }),
+    //db connection
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -27,6 +31,7 @@ import { AuthModule } from './auth/auth.module';
         synchronize: true,
       }),
     }),
+    //graphQl server configuration
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
@@ -35,6 +40,12 @@ import { AuthModule } from './auth/auth.module';
     AuthModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    //global guard to protect all endpoints
+    {
+      provide: APP_GUARD,
+      useClass: GqlAuthGuard,
+    },
+  ],
 })
 export class AppModule {}

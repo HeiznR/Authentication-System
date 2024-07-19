@@ -1,4 +1,8 @@
-import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/user.entity';
 import { UserService } from 'src/users/user.service';
@@ -31,7 +35,23 @@ export class AuthService {
       ...createUserDto,
       ...{ password: hashedPassword },
     });
-    const payload: JwtPayload = { id: user.id, userName: user.userName };
+    const payload: JwtPayload = { sub: user.id, userName: user.userName };
+    const accessToken = this.jwtService.sign(payload, {
+      secret: this.configService.get<string>('JWT_SECRET_KEY'),
+    });
+    return { accessToken };
+  }
+
+  async logIn(userName: string, password: string): Promise<TokenType> {
+    const user = await this.userRepository.findOneBy({ userName });
+    if (!user) {
+      throw new NotFoundException('Wrong credentials');
+    }
+    const isPasswordCorrect = bcrypt.compare(password, user.password);
+    if (!isPasswordCorrect) {
+      throw new NotFoundException('Wrong credentials');
+    }
+    const payload: JwtPayload = { sub: user.id, userName: user.userName };
     const accessToken = this.jwtService.sign(payload, {
       secret: this.configService.get<string>('JWT_SECRET_KEY'),
     });
