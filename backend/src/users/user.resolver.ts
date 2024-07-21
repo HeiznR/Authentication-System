@@ -3,11 +3,15 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserType } from './user.type';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Public } from 'src/auth/decorators/public-endpoint';
+import { UseGuards } from '@nestjs/common';
+import { GoogleAuthGuard } from 'src/auth/Guards/GoogleAuthGuard';
 
 @Resolver(() => UserType)
 export class userResolver {
   constructor(private userService: UserService) {}
   @Query(() => [UserType])
+  @UseGuards(GoogleAuthGuard)
   getUsers() {
     return this.userService.getUsers();
   }

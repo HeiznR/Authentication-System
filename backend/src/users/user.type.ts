@@ -5,6 +5,8 @@ export class UserType {
   @Field(() => ID)
   id: string;
   @Field()
+  userName: string;
+  @Field()
   name: string;
   @Field()
   surname: string;
