@@ -25,7 +25,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./backend:/app
+      - ./backend/src:/app/src
     depends_on:
       - db
     networks:
