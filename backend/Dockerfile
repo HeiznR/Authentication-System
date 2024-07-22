@@ -13,6 +13,7 @@ RUN npm install
 # Bundle app source
 COPY . .
 
+EXPOSE 8080
 # Creates a "dist" folder with the production build
 RUN npm run build
 
