@@ -1,7 +1,9 @@
 import { getClient } from "@/config/apollo-server";
 import { gql } from "@apollo/client";
+import { GoogleButton } from "./home/components/button";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
-export default function Home() {
+export default async function Home() {
   const getUsers = gql`
     query {
       getUsers {
@@ -14,13 +16,19 @@ export default function Home() {
       }
     }
   `;
+  //proof of concept
+  // try {
+  //   const { data } = await getClient().query({ query: getUsers });
+  //   Odata = data;
+  // } catch (error) {
+  //   console.log("error", error);
+  // }
 
-  getClient()
-    .query({ query: getUsers })
-    .then((data) => console.log("data", data));
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      {"test"}
+      <GoogleOAuthProvider clientId={process.env.GOOGLE_CLIENT_ID!}>
+        <GoogleButton />
+      </GoogleOAuthProvider>
     </main>
   );
 }

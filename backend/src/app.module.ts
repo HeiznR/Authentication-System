@@ -43,11 +43,11 @@ import { APP_GUARD } from '@nestjs/core';
   ],
   controllers: [],
   providers: [
-    // //global guard to protect all endpoints
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: GqlAuthGuard,
-    // },
+    //global guard to protect all endpoints
+    {
+      provide: APP_GUARD,
+      useClass: GqlAuthGuard,
+    },
   ],
 })
 export class AppModule {}

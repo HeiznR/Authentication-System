@@ -37,6 +37,8 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: react-container
+    env_file:
+      - ./frontend/.env.local
     command: npm run dev
     ports:
       - "3000:3000"

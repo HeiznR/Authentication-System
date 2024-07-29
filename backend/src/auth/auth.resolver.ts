@@ -5,6 +5,7 @@ import { TokenType } from './token.type';
 import { Public } from './decorators/public-endpoint';
 import { UseGuards } from '@nestjs/common';
 import { GoogleAuthGuard } from './Guards/GoogleAuthGuard';
+import { ConfigService } from '@nestjs/config';
 
 export interface GraphQLContext {
   req: Request;
@@ -13,14 +14,17 @@ export interface GraphQLContext {
 
 @Resolver(() => TokenType)
 export class AuthResolver {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private config: ConfigService,
+  ) {}
 
-  @Query(() => String)
-  @UseGuards(GoogleAuthGuard)
-  async googleAuth(@Context() context) {
-    const { res } = context;
-    res.redirect('/google');
-  }
+  // @Query(() => String)
+  // @UseGuards(GoogleAuthGuard)
+  // async googleAuth(): Promise<string> {
+  //   const url = this.config.get<string>('GOOGLE_CALLBACK_URL');
+  //   return url;
+  // }
 
   @Mutation(() => TokenType)
   @Public()
