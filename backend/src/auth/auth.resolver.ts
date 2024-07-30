@@ -6,6 +6,7 @@ import { Public } from './decorators/public-endpoint';
 import { UseGuards } from '@nestjs/common';
 import { GoogleAuthGuard } from './Guards/GoogleAuthGuard';
 import { ConfigService } from '@nestjs/config';
+import { Credentials, OAuth2Client } from 'google-auth-library';
 
 export interface GraphQLContext {
   req: Request;
@@ -18,7 +19,10 @@ export class AuthResolver {
     private authService: AuthService,
     private config: ConfigService,
   ) {}
-
+  @Query(() => TokenType)
+  getGoogleCode(code: string) {
+    return this.authService.createSession(code);
+  }
   // @Query(() => String)
   // @UseGuards(GoogleAuthGuard)
   // async googleAuth(): Promise<string> {

@@ -13,6 +13,7 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwtPayload';
 import { ConfigService } from '@nestjs/config';
 import { TokenType } from './token.type';
+import { Credentials, OAuth2Client } from 'google-auth-library';
 
 @Injectable()
 export class AuthService {
@@ -22,6 +23,17 @@ export class AuthService {
     private userService: UserService,
     private jwtService: JwtService,
   ) {}
+
+  async createSession(code: string): Promise<Credentials> {
+    const oauth2Client = new OAuth2Client(
+      this.configService.get<string>('GOOGLE_CLIENT_ID'),
+      this.configService.get<string>('GOOGLE_CLIENT_SECRET'),
+      this.configService.get<string>('GOOGLE_CALLBACK_URL'),
+    );
+
+    const { tokens } = await oauth2Client.getToken(code);
+    return tokens;
+  }
 
   async signUp(createUserDto: CreateUserDto): Promise<TokenType> {
     const { password, userName } = createUserDto;
