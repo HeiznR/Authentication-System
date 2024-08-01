@@ -20,7 +20,7 @@ export class AuthResolver {
     private config: ConfigService,
   ) {}
   @Query(() => TokenType)
-  getGoogleCode(code: string) {
+  createSession(@Args('code') code: string) {
     return this.authService.createSession(code);
   }
   // @Query(() => String)
