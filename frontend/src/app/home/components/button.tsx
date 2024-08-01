@@ -4,15 +4,10 @@ import { gql, skipToken } from "@apollo/client";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useSuspenseQuery } from "@apollo/client";
 
-const GET_USERS = gql`
-  query getUsers {
-    getUsers {
-      id
-      userName
-      name
-      surname
-      email
-      password
+const CREATE_SESSION = gql`
+  query createSession($code: String!) {
+    createSession(code: $code) {
+      accessToken
     }
   }
 `;
@@ -20,8 +15,8 @@ const GET_USERS = gql`
 export const GoogleButton = () => {
   const [code, setCode] = useState("");
   const { data } = useSuspenseQuery(
-    GET_USERS,
-    code.length !== 0 ? {} : skipToken
+    CREATE_SESSION,
+    code.length !== 0 ? { variables: { code } } : skipToken
   );
   console.log("data", data);
 
@@ -34,7 +29,7 @@ export const GoogleButton = () => {
 
   return (
     <div>
-      <div onClick={() => login()}>test</div>
+      <div onClick={() => login()}>{"Sign in with Google 🚀"}</div>
     </div>
   );
 };

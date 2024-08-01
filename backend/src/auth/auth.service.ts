@@ -25,18 +25,18 @@ export class AuthService {
   ) {}
 
   async createSession(code: string): Promise<Credentials> {
-    console.log(
-      ` this.configService.get<string>('GOOGLE_CLIENT_ID'),`,
-      this.configService.get<string>('GOOGLE_CALLBACK_URL'),
-    );
-    const oauth2Client = new OAuth2Client({
-      clientId: this.configService.get<string>('GOOGLE_CLIENT_ID'),
-      clientSecret: this.configService.get<string>('GOOGLE_CLIENT_SECRET'),
-      redirectUri: this.configService.get<string>('GOOGLE_CALLBACK_URL'),
-    });
+    try {
+      const oauth2Client = new OAuth2Client(
+        this.configService.get<string>('GOOGLE_CLIENT_ID'),
+        this.configService.get<string>('GOOGLE_CLIENT_SECRET'),
+        this.configService.get<string>('GOOGLE_CALLBACK_URL'),
+      );
+      const { tokens } = await oauth2Client.getToken(code);
 
-    const { tokens } = await oauth2Client.getToken(code);
-    return tokens;
+      return tokens;
+    } catch (error) {
+      throw new NotFoundException('Error');
+    }
   }
 
   async signUp(createUserDto: CreateUserDto): Promise<TokenType> {
