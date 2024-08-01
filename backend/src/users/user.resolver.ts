@@ -11,7 +11,7 @@ import { GoogleAuthGuard } from 'src/auth/Guards/GoogleAuthGuard';
 export class userResolver {
   constructor(private userService: UserService) {}
   @Query(() => [UserType])
-  getUsers(@Args('code') code: string) {
+  getUsers() {
     return this.userService.getUsers();
   }
 

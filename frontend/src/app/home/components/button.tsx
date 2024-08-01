@@ -1,20 +1,12 @@
 "use client";
-import React, { Suspense, useEffect, useState } from "react";
-import {
-  gql,
-  skipToken,
-  useLazyQuery,
-  useLoadableQuery,
-  useMutation,
-  useQuery,
-  useReadQuery,
-} from "@apollo/client";
+import React, { useState } from "react";
+import { gql, skipToken } from "@apollo/client";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useSuspenseQuery } from "@apollo/client";
 
 const GET_USERS = gql`
-  query getUsers($code: String!) {
-    getUsers(code: $code) {
+  query getUsers {
+    getUsers {
       id
       userName
       name
@@ -24,21 +16,14 @@ const GET_USERS = gql`
     }
   }
 `;
-// const CREATE_SESSION = gql`
-//   query createSession($code: String!) {
-//     createSession(code: $code) {
-//       token
-//     }
-//   }
-// `;
 
 export const GoogleButton = () => {
   const [code, setCode] = useState("");
-  const { data: data2 } = useSuspenseQuery(
+  const { data } = useSuspenseQuery(
     GET_USERS,
-    code.length !== 0 ? { variables: { code } } : skipToken
+    code.length !== 0 ? {} : skipToken
   );
-  console.log("data2", data2);
+  console.log("data", data);
 
   const login = useGoogleLogin({
     onSuccess: (codeResponse) => {
